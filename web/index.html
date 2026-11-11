@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Repaint Align</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<header class="header">
+  <h1>Repaint <span class="accent">Align</span></h1>
+  <select id="language" class="language" aria-label="Language"><option value="en">English</option><option value="ru">Русский</option></select>
+</header>
+<p class="lead" data-i18n="Align an original recording and its repaint by waveform similarity. Move the entire target clip without changing audio samples or tempo.">Align an original recording and its repaint by waveform similarity. Move the entire target clip without changing audio samples or tempo.</p>
+<div class="grid">
+  <section class="card">
+    <h2><span class="number">01</span> <span data-i18n="Reference">Reference</span></h2>
+    <p class="caption" data-i18n="Select a passage of the original on one audio track in Audacity.">Select a passage of the original on one audio track in Audacity.</p>
+    <div id="reference" class="capture empty"></div>
+    <button data-action="reference" data-i18n="Capture reference">Capture reference</button>
+  </section>
+  <section class="card">
+    <h2><span class="number">02</span> <span data-i18n="Target">Target</span></h2>
+    <p class="caption" data-i18n="Select the corresponding passage of the repaint, in a different clip.">Select the corresponding passage of the repaint, in a different clip.</p>
+    <div id="target" class="capture empty"></div>
+    <button data-action="target" data-i18n="Capture target">Capture target</button>
+  </section>
+</div>
+<section class="card">
+  <h2><span class="number">03</span> <span data-i18n="Find the shift">Find the shift</span></h2>
+  <div class="settings">
+    <label><span data-i18n="Maximum correction, ±ms">Maximum correction, ±ms</span><input id="max_ms" type="number" min="0" max="10000" step="1" value="100"></label>
+    <label><span data-i18n="Refinement">Refinement</span><select id="method"><option>NCC</option><option>Huber</option></select></label>
+    <label><span data-i18n="Candidates">Candidates</span><input id="candidates" type="number" min="1" max="20" step="1" value="5"></label>
+    <button class="primary" id="analyze" data-action="analyze" data-i18n="Analyze" disabled>Analyze</button>
+  </div>
+  <p class="notice" data-i18n="Global NCC search · fixed comparison interval · one-sample resolution">Global NCC search · fixed comparison interval · one-sample resolution</p>
+</section>
+<div id="status" role="status" aria-live="polite"></div>
+<section id="result" class="card hidden">
+  <h2 data-i18n="Analysis result">Analysis result</h2>
+  <div class="summary">
+    <div><span class="caption" data-i18n="Align selection starts">Align selection starts</span><strong id="initial"></strong></div>
+    <div><span class="caption" data-i18n="Correction">Correction</span><strong id="correction"></strong></div>
+    <div><span class="caption" data-i18n="Total movement">Total movement</span><strong id="total"></strong></div>
+  </div>
+  <div class="details" id="details"></div>
+  <p class="warning" id="warnings"></p>
+  <canvas id="curve" width="1200" height="240" aria-label="NCC over correction range"></canvas>
+  <div class="caption" data-i18n="Coarse-search NCC; horizontal axis: correction in milliseconds.">Coarse-search NCC; horizontal axis: correction in milliseconds.</div>
+  <table>
+    <thead><tr><th data-i18n="Candidate">Candidate</th><th data-i18n="Correction, samples">Correction, samples</th><th>NCC</th><th data-i18n="Loss">Loss</th></tr></thead>
+    <tbody id="candidate_rows"></tbody>
+  </table>
+  <div class="footer"><button class="primary" id="apply" data-action="confirm" data-i18n="Apply movement…">Apply movement…</button><span class="notice" data-i18n="Positive moves right; negative moves left.">Positive moves right; negative moves left.</span></div>
+</section>
+<section id="applied" class="card hidden" role="status"></section>
+<div class="footer">
+  <button data-action="reset" data-i18n="Clear captures">Clear captures</button>
+  <span class="notice" data-i18n="Keep one project open. Do not edit Audacity during an operation. Check the result by listening. Undo the movement with Audacity Undo / Ctrl+Z.">Keep one project open. Do not edit Audacity during an operation. Check the result by listening. Undo the movement with Audacity Undo / Ctrl+Z.</span>
+</div>
+<dialog id="confirmation" aria-labelledby="confirmation_title">
+  <h2 id="confirmation_title" data-i18n="Confirm clip movement">Confirm clip movement</h2>
+  <p id="confirmation_text"></p>
+  <p class="danger-note" data-i18n="The entire target clip will move. Audio samples and tempo are preserved. Use Audacity Undo to reverse the movement.">The entire target clip will move. Audio samples and tempo are preserved. Use Audacity Undo to reverse the movement.</p>
+  <div class="dialog-actions"><button id="cancel_apply" data-i18n="Cancel">Cancel</button><button class="primary" id="confirm_apply" data-i18n="Confirm movement">Confirm movement</button></div>
+</dialog>
+</body>
+</html>

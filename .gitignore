@@ -1,0 +1,46 @@
+# Local environments and build/test caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Private research, audit output, and runtime diagnostics
+research/
+.local/
+.audit/
+*.log
+*transcript*.json
+*report*.zip
+
+# Credentials and editor/agent state
+.env
+.env.*
+!.env.example
+.aws/
+.codex/
+.agents/
+.idea/
+.vscode/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Never publish recordings, Audacity projects, or model/session data
+*.wav
+*.flac
+*.mp3
+*.ogg
+*.m4a
+*.aup
+*.aup3*
+*.aup4*
+*.npy
+*.npz
